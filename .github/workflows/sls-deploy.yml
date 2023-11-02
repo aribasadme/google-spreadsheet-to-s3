@@ -1,0 +1,53 @@
+name: Deploy AWS services
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sls-deploy-prod:
+    name: Serverless Deploy Prod
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: create-json
+      id: create-json
+      uses: jsdaniell/create-json@v1.2.2
+      with:
+        name: "service-account-credentials.json"
+        json: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
+    - run: |
+        git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+        git config --global user.name "${GITHUB_ACTOR}"
+        git add .
+        git add --force service-account-credentials.json
+        git status
+        git commit -a -m "Deploy Service Account Credentials JSON"
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm shrinkwrap
+    - run: npm ci
+    - name: serverless install plugins
+      uses: serverless/github-action@v3.2
+      with:
+        args: -c "serverless plugin install --name serverless-python-requirements"
+        entrypoint: /bin/sh
+    - name: serverless deploy
+      uses: serverless/github-action@v3.2
+      with:
+        args: deploy --stage ${{ env.CI_ENV }}
+      env:
+        CI_ENV: prod
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        SPREADSHEET_ID: ${{ vars.SPREADSHEET_ID }}
+        BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+        BUCKET_KEY: ${{ vars.BUCKET_KEY }}
