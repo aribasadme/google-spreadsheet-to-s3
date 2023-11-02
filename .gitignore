@@ -1,0 +1,12 @@
+# Environment
+venv/
+.env
+
+# Distribution / packaging
+*.zip
+
+# OAuth credentials
+service-account-credentials.*
+
+# Visual Studio Code
+.vscode/*
