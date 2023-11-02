@@ -1,0 +1,5 @@
+{
+    "name": "google-spreadsheet-to-s3",
+    "description": "AWS Lambda function that downloads specific Google Spreadsheet and loads into S3.",
+    "version": "0.1.0"
+}
