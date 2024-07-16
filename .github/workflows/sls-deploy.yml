@@ -13,10 +13,10 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: create-json
         id: create-json
-        uses: jsdaniell/create-json@v1.2.2
+        uses: jsdaniell/create-json@v1.2.3
         with:
           name: "service-account-credentials.json"
           json: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
@@ -28,7 +28,7 @@ jobs:
           git status
           git commit -a -m "Deploy Service Account Credentials JSON"
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm shrinkwrap
