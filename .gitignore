@@ -1,9 +1,16 @@
+# OS Related
+.DS_Store/
+
 # Environment
+.venv/
 venv/
 .env
 
 # Distribution / packaging
 *.zip
+
+# Terraform
+.terraform/
 
 # OAuth credentials
 service-account-credentials.*
