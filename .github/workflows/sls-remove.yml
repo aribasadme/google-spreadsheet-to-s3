@@ -6,32 +6,30 @@ jobs:
   sls-remove-prod:
     name: Serverless Remove Prod
     runs-on: ubuntu-latest
-    environment:
-      name: production
     strategy:
       matrix:
         node-version: [18.x]
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm shrinkwrap
-    - run: npm ci
-    - name: serverless install plugins
-      uses: serverless/github-action@v3.2
-      with:
-        args: -c "serverless plugin install --name serverless-python-requirements"
-        entrypoint: /bin/sh
-    - name: serverless remove
-      uses: serverless/github-action@v3.2
-      with:
-        args: remove --stage ${{ env.CI_ENV }}
-      env:
-        CI_ENV: prod
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        SPREADSHEET_ID: ${{ vars.SPREADSHEET_ID }}
-        BUCKET_NAME: ${{ vars.BUCKET_NAME }}
-        BUCKET_KEY: ${{ vars.BUCKET_KEY }}
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm shrinkwrap
+      - run: npm ci
+      - name: serverless install plugins
+        uses: serverless/github-action@v3.2
+        with:
+          args: -c "serverless plugin install --name serverless-python-requirements"
+          entrypoint: /bin/sh
+      - name: serverless remove
+        uses: serverless/github-action@v3.2
+        with:
+          args: remove --stage ${{ env.CI_ENV }}
+        env:
+          CI_ENV: prod
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SPREADSHEET_ID: ${{ vars.SPREADSHEET_ID }}
+          BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+          BUCKET_KEY: ${{ vars.BUCKET_KEY }}
