@@ -1,5 +1,14 @@
 service: google-spreadsheet-to-s3
 
+package:
+  patterns:
+    - "!.github/workflows/**"
+    - "!.gitignore"
+    - "!assets/**"
+    - "!LICENSE"
+    - "!README.md"
+    - "!terraform/**"
+
 plugins:
   - serverless-python-requirements
 
