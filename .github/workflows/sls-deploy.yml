@@ -6,21 +6,26 @@ on:
       - main
 
 jobs:
-  sls-deploy-prod:
-    name: Serverless Deploy Prod
+  sls-deploy:
+    name: Serverless Deploy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}/serverless/
     strategy:
       matrix:
         node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
-      - name: create-json
+      - name: Create JSON
         id: create-json
         uses: jsdaniell/create-json@v1.2.3
         with:
           name: "service-account-credentials.json"
           json: ${{ secrets.SERVICE_ACCOUNT_CREDENTIALS }}
-      - run: |
+          dir: "serverless/"
+      - name: Deploy created JSON
+        run: |
           git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           git config --global user.name "${GITHUB_ACTOR}"
           git add .
@@ -36,12 +41,13 @@ jobs:
       - name: serverless install plugins
         uses: serverless/github-action@v3.2
         with:
-          args: -c "serverless plugin install --name serverless-python-requirements"
+          args: -c "cd ./serverless && serverless plugin install --name serverless-python-requirements"
           entrypoint: /bin/sh
       - name: serverless deploy
         uses: serverless/github-action@v3.2
         with:
-          args: deploy --stage ${{ env.CI_ENV }}
+          args: -c "cd ./serverless && serverless deploy --stage ${{ env.CI_ENV }} --verbose"
+          entrypoint: /bin/sh
         env:
           CI_ENV: prod
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

@@ -3,8 +3,8 @@ name: Serverless Remove
 on: workflow_dispatch
 
 jobs:
-  sls-remove-prod:
-    name: Serverless Remove Prod
+  sls-remove:
+    name: Serverless Remove
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,12 +20,13 @@ jobs:
       - name: serverless install plugins
         uses: serverless/github-action@v3.2
         with:
-          args: -c "serverless plugin install --name serverless-python-requirements"
+          args: -c "cd ./serverless && serverless plugin install --name serverless-python-requirements"
           entrypoint: /bin/sh
       - name: serverless remove
         uses: serverless/github-action@v3.2
         with:
-          args: remove --stage ${{ env.CI_ENV }}
+          args: -c "cd ./serverless && serverless remove --stage ${{ env.CI_ENV }} --verbose"
+          entrypoint: /bin/sh
         env:
           CI_ENV: prod
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
