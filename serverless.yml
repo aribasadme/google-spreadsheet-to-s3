@@ -17,7 +17,9 @@ provider:
   runtime: python3.10
   stage: ${opt:stage, 'dev'}
   region: eu-west-3
-  deploymentBucket: sls-deployment-bucket-${env:CI_ENV}
+  deploymentBucket:
+    name: ${env:DEPLOYMENT_BUCKET}
+    maxPreviousDeploymentArtifacts: 1
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
     BUCKET_KEY: ${env:BUCKET_KEY}
