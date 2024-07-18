@@ -13,7 +13,7 @@ permissions:
 
 env:
   TF_LOG: INFO
-  TF_VAR_aws_region: ${{ secrets.AWS_REGION }}
+  TF_VAR_aws_region: "eu-west-3"
   TF_VAR_bucket_name: ${{ vars.BUCKET_NAME }}
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: "eu-west-3"
           role-session-name: ${{ github.event.repository.name }}
 
       - name: Setup Terraform
@@ -49,7 +49,7 @@ jobs:
         env:
           BUCKET_NAME: ${{ secrets.TF_BACKEND_BUCKET_NAME }}
           PLAN_NAME: ${{ github.event.repository.name }}
-          REGION: ${{ secrets.AWS_REGION }}
+          REGION: "eu-west-3"
         run: terraform init -backend-config="bucket=${BUCKET_NAME}" -backend-config="key=${PLAN_NAME}/${REGION}.tfstate" -backend-config="region=${REGION}"
 
       - name: Terraform Validate
