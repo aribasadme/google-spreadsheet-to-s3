@@ -47,10 +47,10 @@ jobs:
       - name: Terraform Init
         id: init
         env:
-          BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+          BUCKET_NAME: ${{ secrets.TF_BACKEND_BUCKET_NAME }}
           PLAN_NAME: ${{ github.event.repository.name }}
           REGION: ${{ secrets.AWS_REGION }}
-        run: terraform init -backend-config="bucket=${BUCKET_NAME}" -backend-config="key=${PLAN_NAME}/${REGION}.tfstate" -backend-config="region=${AWS_REGION}"
+        run: terraform init -backend-config="bucket=${BUCKET_NAME}" -backend-config="key=${PLAN_NAME}/${REGION}.tfstate" -backend-config="region=${REGION}"
 
       - name: Terraform Validate
         id: validate

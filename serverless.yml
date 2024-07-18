@@ -1,5 +1,14 @@
 service: google-spreadsheet-to-s3
 
+package:
+  patterns:
+    - "!.github/workflows/**"
+    - "!.gitignore"
+    - "!assets/**"
+    - "!LICENSE"
+    - "!README.md"
+    - "!terraform/**"
+
 plugins:
   - serverless-python-requirements
 
@@ -8,11 +17,14 @@ provider:
   runtime: python3.10
   stage: ${opt:stage, 'dev'}
   region: eu-west-3
-  deploymentBucket:	sls-deployment-bucket-${env:CI_ENV}
+  deploymentBucket:
+    name: ${env:DEPLOYMENT_BUCKET}
+    maxPreviousDeploymentArtifacts: 1
   environment:
-    SPREADSHEET_ID: ${env:SPREADSHEET_ID}
     BUCKET_NAME: ${env:BUCKET_NAME}
     BUCKET_KEY: ${env:BUCKET_KEY}
+    LOG_LEVEL: INFO
+    SPREADSHEET_ID: ${env:SPREADSHEET_ID}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -27,5 +39,5 @@ functions:
     timeout: 60
     events:
       - schedule:
-            rate: cron(0 1 * * ? *)
-            name: google-spreadsheet-to-s3-sched
+          rate: cron(0 1 * * ? *)
+          name: google-spreadsheet-to-s3-sched
