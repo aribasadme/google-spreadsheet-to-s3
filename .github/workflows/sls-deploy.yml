@@ -6,9 +6,12 @@ on:
       - main
 
 jobs:
-  sls-deploy-prod:
-    name: Serverless Deploy Prod
+  sls-deploy:
+    name: Serverless Deploy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}/serverless/
     strategy:
       matrix:
         node-version: [18.x]
@@ -41,7 +44,8 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@v3.2
         with:
-          args: deploy --stage ${{ env.CI_ENV }}
+          args: -c "cd ./serverless && serverless deploy --stage ${{ env.CI_ENV }} --verbose"
+          entrypoint: /bin/sh
         env:
           CI_ENV: prod
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
