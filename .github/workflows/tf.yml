@@ -17,8 +17,8 @@ env:
   TF_VAR_bucket_name: ${{ vars.BUCKET_NAME }}
 
 jobs:
-  terraform-prod:
-    name: "Terraform Prod"
+  terraform:
+    name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
       run:
