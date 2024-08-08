@@ -18,7 +18,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: eu-west-3
   deploymentBucket:
-    name: ${env:DEPLOYMENT_BUCKET}
+    name: sls-deployments-${aws:accountId}-${self:provider.region}
     maxPreviousDeploymentArtifacts: 1
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
@@ -40,4 +40,4 @@ functions:
     events:
       - schedule:
           rate: cron(0 1 * * ? *)
-          name: google-spreadsheet-to-s3-sched
+          name: ${self:service}-sched
