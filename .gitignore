@@ -11,6 +11,7 @@ venv/
 
 # Terraform
 .terraform/
+local.auto.tfvars
 
 # OAuth credentials
 service-account-credentials.*
