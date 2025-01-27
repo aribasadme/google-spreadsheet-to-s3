@@ -1,8 +1,8 @@
-import boto3
 import logging
-import gspread
+
+import boto3
 from botocore.exceptions import ClientError
-from oauth2client.service_account import ServiceAccountCredentials
+import gspread
 
 log = logging.getLogger()
 
@@ -25,27 +25,16 @@ def upload_to_s3(bucket: str, key: str, data: list) -> bool:
 def get_spreadsheet_data(spreadsheet_id: str) -> list:
     """Downloads spreadsheet data from Google Sheets"""
     log.info(f"Downloading {spreadsheet_id}")
-
-    scope = [
-        "https://spreadsheets.google.com/feeds",
-        "https://www.googleapis.com/auth/drive"
-    ]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(
-        "service-account-credentials.json",
-        scopes=scope
-    )
-    content = []
     try:
-        client = gspread.authorize(creds)
+        client = gspread.service_account(filename="service-account-credentials.json")
         spreadsheet = client.open_by_key(spreadsheet_id)
         worksheet = spreadsheet.get_worksheet(0)  # First worksheet
         content = worksheet.get_all_values()  # Get all rows as list of lists
-
         log.info(f"Downloaded {len(content)} rows from {spreadsheet_id}")
+        return content
     except Exception as e:
         log.error(e)
-
-    return content
+        return []
 
 
 def get_filename_from_key(key: str) -> str:

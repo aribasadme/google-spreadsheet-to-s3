@@ -5,7 +5,7 @@ import json
 from utils import get_spreadsheet_data, upload_to_s3, get_filename_from_key
 
 log = logging.getLogger()
-log.setLevel(logging.getLevelName(str(os.environ["LOG_LEVEL"]).upper()))
+log.setLevel(os.environ["LOG_LEVEL"])
 
 
 def run(event, _):
