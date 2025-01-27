@@ -48,7 +48,12 @@ jobs:
       - name: serverless install plugins
         uses: serverless/github-action@v3.2
         with:
-          args: -c "cd ./serverless && serverless plugin install --name serverless-python-requirements"
+          args: |
+            -c "
+            cd ./serverless &&
+            serverless plugin install --name serverless-python-requirements &&
+            serverless plugin install --name serverless-prune-plugin
+            "
           entrypoint: /bin/sh
 
       - name: serverless deploy

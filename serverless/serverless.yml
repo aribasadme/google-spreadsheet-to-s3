@@ -1,16 +1,13 @@
 service: google-spreadsheet-to-s3
 
-package:
-  patterns:
-    - "!.github/workflows/**"
-    - "!.gitignore"
-    - "!assets/**"
-    - "!LICENSE"
-    - "!README.md"
-    - "!terraform/**"
-
 plugins:
   - serverless-python-requirements
+  - serverless-prune-plugin
+
+custom:
+  prune:
+    automatic: true
+    number: 3
 
 provider:
   name: aws
@@ -39,5 +36,5 @@ functions:
     timeout: 60
     events:
       - schedule:
-          rate: cron(0 1 * * ? *)
+          rate: cron(0 1 * * ? *) # 1:00 am UTC time
           name: ${self:service}-sched
