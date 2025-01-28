@@ -39,6 +39,7 @@ jobs:
           args: -c "cd ./serverless && serverless remove --stage ${{ env.CI_ENV }} --verbose"
           entrypoint: /bin/sh
         env:
+          CI_ENV: prod
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           BUCKET_NAME: ${{ vars.BUCKET_NAME }}
           BUCKET_KEY: ${{ vars.BUCKET_KEY }}
